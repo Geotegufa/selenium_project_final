@@ -1,8 +1,31 @@
-from .pages.main_page import MainPage
+from .base_page import BasePage
+from selenium.webdriver.common.by import By
 
+class MainPage(BasePage):
+    """
+    Page Object для главной страницы сайта.
+    Содержит методы для работы с элементами страницы.
+    """
 
-def test_guest_can_go_to_login_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/"
-    page = MainPage(browser, link)   # инициализируем Page Object, передаем в конструктор экземпляр драйвера и url адрес 
-    page.open()                      # открываем страницу
-    page.go_to_login_page()          # выполняем метод страницы — переходим на страницу логина
+    # Метод-проверка наличия ссылки на логин
+    def should_be_login_link(self, red_test=False):
+        """
+        Проверяет, что на странице есть ссылка на логин.
+        red_test=True -> использовать намеренно неправильный селектор
+        """
+        if red_test:
+            # Красный тест: неправильный селектор
+            assert self.is_element_present(By.CSS_SELECTOR, "#login_link_invalid"), \
+                "Login link is not presented"
+        else:
+            # Зеленый тест: правильный селектор
+            assert self.is_element_present(By.CSS_SELECTOR, "#login_link"), \
+                "Login link is not presented"
+
+    # Метод перехода на страницу логина
+    def go_to_login_page(self):
+        """
+        Находит ссылку на логин и кликает по ней.
+        """
+        login_link = self.browser.find_element(By.CSS_SELECTOR, "#login_link")
+        login_link.click()
