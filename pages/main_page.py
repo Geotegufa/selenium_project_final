@@ -1,5 +1,6 @@
 from .base_page import BasePage
 from selenium.webdriver.common.by import By
+from .locators import MainPageLocators
 
 class MainPage(BasePage):
     """
@@ -8,24 +9,17 @@ class MainPage(BasePage):
     """
 
     # Метод-проверка наличия ссылки на логин
-    def should_be_login_link(self, red_test=False):
+    def should_be_login_link(self):
         """
         Проверяет, что на странице есть ссылка на логин.
-        red_test=True -> использовать намеренно неправильный селектор
         """
-        if red_test:
-            # Красный тест: неправильный селектор
-            assert self.is_element_present(By.CSS_SELECTOR, "#login_link_invalid"), \
-                "Login link is not presented"
-        else:
-            # Зеленый тест: правильный селектор
-            assert self.is_element_present(By.CSS_SELECTOR, "#login_link"), \
-                "Login link is not presented"
+        assert self.is_element_present(*MainPageLocators.LOGIN_LINK), \
+            "Login link is not presented"
 
     # Метод перехода на страницу логина
     def go_to_login_page(self):
         """
         Находит ссылку на логин и кликает по ней.
         """
-        login_link = self.browser.find_element(By.CSS_SELECTOR, "#login_link")
+        login_link = self.browser.find_element(*MainPageLocators.LOGIN_LINK)
         login_link.click()
