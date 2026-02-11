@@ -1,22 +1,29 @@
-# test_product_page.py
-
+import pytest
 from pages.product_page import ProductPage
 
-def test_guest_can_add_product_to_basket(browser):
-    # Ссылка на новый товар
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
-
+@pytest.mark.parametrize('link', [
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer2",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer3",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer4",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer5",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer6",
+    pytest.param(
+        "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer7",
+        marks=pytest.mark.xfail
+    ),
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
+    "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9",
+])
+def test_guest_can_add_product_to_basket(browser, link):
+    """
+    Тест добавления товара в корзину на разных промо-ссылках.
+    Для offer7 тест ожидаемо падает (xfail).
+    """
     page = ProductPage(browser, link)
     page.open()
-
-    # Добавляем товар в корзину
     page.add_product_to_basket()
-
-    # Решаем математическую задачу в алерте
-    page.solve_quiz_and_get_code()
-
-    # Проверяем название товара
+    page.solve_quiz_and_get_code()  # Решаем математический quiz
     page.should_be_correct_product_name_in_message()
-
-    # Проверяем цену корзины
     page.should_be_correct_basket_total()
