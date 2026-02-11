@@ -1,25 +1,37 @@
-from selenium.common.exceptions import NoSuchElementException  # импорт исключения
+# pages/base_page.py
 
-class BasePage():
-    def __init__(self, browser, url, timeout=10):
+import math
+from selenium.common.exceptions import NoAlertPresentException
+
+
+class BasePage:
+    def __init__(self, browser, url):
         self.browser = browser
         self.url = url
-        # Неявное ожидание элементов
-        self.browser.implicitly_wait(timeout)
 
+    # Метод открытия страницы
     def open(self):
-        """
-        Открывает страницу по URL
-        """
         self.browser.get(self.url)
 
-    def is_element_present(self, how, what):
-        """
-        Проверяет, что элемент присутствует на странице.
-        Возвращает True, если элемент найден, иначе False.
-        """
+    # Метод для решения математического выражения в алерте
+    def solve_quiz_and_get_code(self):
+        alert = self.browser.switch_to.alert
+
+        # Получаем число x из текста алерта
+        x = alert.text.split(" ")[2]
+
+        # Вычисляем ответ по формуле
+        answer = str(math.log(abs((12 * math.sin(float(x))))))
+
+        # Вводим ответ в поле алерта
+        alert.send_keys(answer)
+        alert.accept()
+
+        # Получаем проверочный код из второго алерта
         try:
-            self.browser.find_element(how, what)
-        except NoSuchElementException:
-            return False
-        return True
+            alert = self.browser.switch_to.alert
+            alert_text = alert.text
+            print(f"Your code: {alert_text}")
+            alert.accept()
+        except NoAlertPresentException:
+            print("No second alert presented")

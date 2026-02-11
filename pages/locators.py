@@ -1,11 +1,29 @@
+# pages/locators.py
+
 from selenium.webdriver.common.by import By
 
-# Локаторы для главной страницы
-class MainPageLocators:
-    LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
 
+class ProductPageLocators:
+    # Кнопка "Добавить в корзину"
+    ADD_TO_BASKET_BUTTON = (By.CSS_SELECTOR, "button.btn-add-to-basket")
 
-# Локаторы для страницы логина
-class LoginPageLocators:
-    LOGIN_FORM = (By.CSS_SELECTOR, "#login_form")
-    REGISTER_FORM = (By.CSS_SELECTOR, "#register_form")
+    # Название товара на странице
+    PRODUCT_NAME = (By.CSS_SELECTOR, "div.product_main h1")
+
+    # Цена товара на странице
+    PRODUCT_PRICE = (By.CSS_SELECTOR, "div.product_main .price_color")
+
+    # Сообщение об успешном добавлении товара
+    SUCCESS_MESSAGE = (By.CSS_SELECTOR, "#messages .alert-success")
+
+    # Название товара в сообщении
+    SUCCESS_MESSAGE_PRODUCT_NAME = (
+        By.CSS_SELECTOR,
+        "#messages .alert-success strong"
+    )
+
+    # Сообщение со стоимостью корзины
+    BASKET_TOTAL_MESSAGE = (
+        By.CSS_SELECTOR,
+        "#messages .alert-info strong"
+    )
